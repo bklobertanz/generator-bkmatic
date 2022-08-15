@@ -2,6 +2,7 @@ const Generator = require('yeoman-generator')
 const makeDir = require('make-dir')
 const path = require('path')
 const chalk = require('chalk')
+const yosay = require('yosay')
 
 const templateTypes = {
   "NODE-TS-JEST": "nodejs-ts-jest"
@@ -10,6 +11,7 @@ const templateTypes = {
 class MyGenerator extends Generator{
   async prompting(){
     await this.spawnCommand('clear')
+    console.log(yosay("'Allo, welcome to bkmatic.\nPlease, enter your project info:"))
     this.answers = await this.prompt([
       {
       type: 'input',
@@ -37,7 +39,7 @@ class MyGenerator extends Generator{
     {
       type:'list',
       name:'templateType',
-      message: 'Select a desired template type:',
+      message: 'Select a project generator:',
       choices: [templateTypes['NODE-TS-JEST']]
     }])
   }
