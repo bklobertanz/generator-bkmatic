@@ -1,6 +1,7 @@
 const Generator = require('yeoman-generator')
 const makeDir = require('make-dir')
 const path = require('path')
+const chalk = require('chalk')
 
 const templateTypes = {
   "NODE-TS-JEST": "nodejs-ts-jest"
@@ -8,6 +9,7 @@ const templateTypes = {
 
 class MyGenerator extends Generator{
   async prompting(){
+    await this.spawnCommand('clear')
     this.answers = await this.prompt([
       {
       type: 'input',
@@ -43,7 +45,7 @@ class MyGenerator extends Generator{
     if (path.basename(this.destinationRoot()) !== this.answers.projectName) {
       return makeDir(this.answers.projectName).then(path => {
         this.destinationRoot(path);
-        this.log(`\nGenerating a new project in ${path}\n`);
+        this.log(`\n ⏳ Generating a new project in ${chalk.green(path)}\n`);
       });
     }
   }
@@ -66,14 +68,17 @@ class MyGenerator extends Generator{
   }
 
   async end(){
+    this.log(chalk.cyan('\n ⏳ Installing dependencies...\n'))
     await this.spawnCommand('yarn')
+    this.log(chalk.yellow('\n ⏳ Preparing git hooks and husky...\n'))
     await this.spawnCommand('yarn', ['prepare'])
+    this.log(chalk.green('\n ⏳ Initializing git and making first commit ...\n'))
     await this.spawnCommand('git',['init', '--quiet'])
     await this.spawnCommand('git',['add', '-A'])
-    await this.spawnCommand('git',['commit', '-m "chore: initial commit"'])
-    this.log('----------------------')
-    this.log('Remember to update project README!')
-    this.log('Project created, happy hacking!')
+    await this.spawnCommand('git',['commit', '-m chore: initial commit'])
+    this.log(chalk.bold('\n----------------------\n'))
+    this.log(chalk.bold(` ⚠️ Remember to ${chalk.underline('update project README!')}`))
+    this.log(`\n ✅ Project scaffold has been ${chalk.green('created')}, have fun 🎉\n`)
   }
 
 }
