@@ -64,20 +64,23 @@ class MyGenerator extends Generator{
   }
 
   #creatingNodeTemplate(templateType){
-    this.fs.copy(this.templatePath(templateType), this.destinationPath())
-    this.#renameToDotFile(['husky', 'eslintignore','eslintrc.js','gitignore','prettierrc'])
-
+    this.fs.copy([this.templatePath(templateType), `!${this.templatePath(templateType)}/_husky`], this.destinationPath())
+    this.fs.copy(`${this.templatePath(templateType)}/_husky`,`${this.destinationPath()}/.husky`)
+    this.#renameToDotFile(['eslintignore','eslintrc.js','gitignore','prettierrc'])
   }
 
-  async end(){
-    this.log(chalk.cyan('\n ⏳ Installing dependencies...\n'))
-    await this.spawnCommand('yarn')
-    this.log(chalk.yellow('\n ⏳ Preparing git hooks and husky...\n'))
-    await this.spawnCommand('yarn', ['prepare'])
-    this.log(chalk.green('\n ⏳ Initializing git and making first commit ...\n'))
-    await this.spawnCommand('git',['init', '--quiet'])
-    await this.spawnCommand('git',['add', '-A'])
-    await this.spawnCommand('git',['commit', '-m chore: initial commit'])
+  end(){
+    
+    this.log(chalk.green('\n ⏳ Initializing git...\n'))
+    this.spawnCommandSync('git',['init'])
+    
+    this.log(chalk.cyan('\n ⏳ Installing dependencies, preparing git hooks and husky...\n'))
+    this.spawnCommandSync('yarn')
+
+    this.log(chalk.yellow('\n ⏳ Making first commit...\n'))
+    this.spawnCommandSync('git',['add', '-A'])
+    this.spawnCommandSync('git',['commit', '-m chore: initial commit'])
+
     this.log(chalk.bold('\n----------------------\n'))
     this.log(chalk.bold(` ⚠️ Remember to ${chalk.underline('update project README!')}`))
     this.log(`\n ✅ Project scaffold has been ${chalk.green('created')}, have fun 🎉\n`)
