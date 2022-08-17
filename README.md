@@ -53,6 +53,8 @@ $ yarn global add yo
 
 ### Installation
 
+`cd` into project directory and do:
+
 ```
 $ yarn
 $ yarn link
@@ -60,10 +62,13 @@ $ yarn link
 
 
 ### Usage
- Do:
+
+Do:
+
 ```
 $ yo bkmatic
 ```
+
 And follow prompted instructions.
 
 [Back to the Top](#table-of-contents)
