@@ -47,6 +47,10 @@ Yeoman generator for bootstrapping web projects.
 - Install yo globally: 
 ```
 $ yarn global add yo
+
+# or
+
+$ npm install --global yo
 ```
 
 
